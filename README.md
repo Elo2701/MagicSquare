@@ -33,3 +33,76 @@ row == grid.length
 col == grid[i].length
 1 <= row, col <= 10
 0 <= grid[i][j] <= 15
+
+Answer
+package practice;
+
+class MagicSquare{
+    public static int numMagicSquaresInside(int[][] grid) {  // Made this method static
+        int rowCount = grid.length;
+        int colCount = grid[0].length;
+        int magicSquareCount = 0;
+
+        for (int i = 0; i <= rowCount - 3; i++) {
+            for (int j = 0; j <= colCount - 3; j++) {
+                if (isMagicSquare(grid, i, j)) {
+                    magicSquareCount++;
+                }
+            }
+        }
+
+        return magicSquareCount;
+    }
+
+    private static boolean isMagicSquare(int[][] grid, int row, int col) {
+        int[] count = new int[16];
+        for (int i = row; i < row + 3; i++) {  // Fixed the loop boundary
+            for (int j = col; j < col + 3; j++) {  // Fixed the loop boundary
+                int num = grid[i][j];
+                if (num < 1 || num > 9) {
+                    return false;
+                }
+                count[num]++;
+                if (count[num] > 1) {
+                    return false;
+                }
+            }
+        }
+
+        int sum = grid[row][col] + grid[row][col + 1] + grid[row][col + 2];
+        for (int i = 0; i < 3; i++) {
+            if (grid[row + i][col] + grid[row + i][col + 1] + grid[row + i][col + 2] != sum) {
+                return false;
+            }
+            if (grid[row][col + i] + grid[row + 1][col + i] + grid[row + 2][col + i] != sum) {
+                return false;
+            }
+        }
+
+        if (grid[row][col] + grid[row + 1][col + 1] + grid[row + 2][col + 2] != sum) {
+            return false;
+        }
+        if (grid[row][col + 2] + grid[row + 1][col + 1] + grid[row + 2][col] != sum) {
+            return false;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        int[][] grid1 = {
+            {4, 3, 8, 4},
+            {9, 5, 1, 9},
+            {2, 7, 6, 2}
+        };
+
+        int[][] grid2 = {
+            {3, 8, 4},
+            {5, 1, 9},
+            {7, 6, 2}
+        };
+
+        System.out.println(numMagicSquaresInside(grid1)); 
+        System.out.println(numMagicSquaresInside(grid2)); 
+    }
+}
+
